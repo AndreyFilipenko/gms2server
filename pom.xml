@@ -11,7 +11,7 @@
     </parent>
     <groupId>ru.facom</groupId>
     <artifactId>gms2server</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.1.0</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -23,10 +23,27 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j</artifactId>
+            <version>1.3.8.RELEASE</version>
+        </dependency>
+
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20200518</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.14</version>
         </dependency>
     </dependencies>
 
