@@ -2,3 +2,6 @@ jdbc:
   login: dvcjpblmwrqrdw
   password: 7b998ff756de0da1dc8c1482e2c2d61465acf2de3aabd4c0f66d2cbcac20ed90
   url: jdbc:postgresql://ec2-54-246-90-10.eu-west-1.compute.amazonaws.com/d22fhdh5dik09i
+
+build:
+  version: "@project.version@"
