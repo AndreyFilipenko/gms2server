@@ -4,6 +4,9 @@ import com.facom.repository.UserRepository;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -12,14 +15,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public JSONObject createUser(String login, String password) {
+    public Map<String,Object> createUser(String login, String password) {
         boolean isCreated = userRepository.createUser(login, password);
-        JSONObject result = new JSONObject();
+        Map jsonMap = new HashMap<>();
         if (isCreated) {
-            result.put("operationStatus", "sucsess");
+            jsonMap.put("operationStatus", "sucsess");
         } else {
-            result.put("operationStatus", "failure");
+            jsonMap.put("operationStatus", "failure");
         }
-        return result;
+        return jsonMap;
     }
 }
