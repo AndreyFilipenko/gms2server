@@ -32,6 +32,7 @@ public class UserController {
 
         JSONObject jsonResult = securityService.login(userLoginDto.getLogin(),
                 userLoginDto.getPassword());
+
         return ResponseEntity.ok(jsonResult.toString());
     }
 }
