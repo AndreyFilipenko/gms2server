@@ -1,5 +1,6 @@
 package com.facom.repository;
 
+import com.facom.exception.UserSecurityTokenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -12,6 +13,10 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.UUID;
 
+import static com.facom.domain.UserOperationStatus.INTERNAL_ERROR;
+import static com.facom.domain.UserOperationStatus.USER_AVATAR_NOT_EXISTS;
+
+
 @Repository
 public class SecurityRepository {
     private static final Logger logger = LoggerFactory.getLogger(SecurityRepository.class);
@@ -21,6 +26,7 @@ public class SecurityRepository {
     private static final String SQL_SELECT_VERIFIED_UID = "select id from users where password = :password and login = :login;";
     private static final String SQL_SELECT_TOKEN_BY_UID = "select token from login_tokens where user_id = :user_id;";
     private static final String SQL_INSERT_NEW_TOKEN = "insert into login_tokens (user_id, token) values (:user_id, :security_token);";
+    private static final String SQL_SELECT_UID_BY_TOKEN = "select user_id from login_tokens where token = :security_token;";
 
     public SecurityRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
@@ -63,5 +69,20 @@ public class SecurityRepository {
             logger.error("Invoke generateSecurityToken({}) with exception.", userId, ex);
         }
     return null;
+    }
+
+    @Nullable
+    public Long getUserIdByToken(String securityToken) throws UserSecurityTokenException {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("security_token", securityToken);
+        try {
+            return template.queryForObject(SQL_SELECT_UID_BY_TOKEN, namedParameters, Long.class);
+        } catch (EmptyResultDataAccessException ex) {
+            logger.error("Invoke getUserIdByToken({}) with exception.", securityToken, ex);
+            throw new UserSecurityTokenException(USER_AVATAR_NOT_EXISTS);
+        } catch (DataAccessException ex) {
+            logger.error("Invoke getUserIdByToken({}) with exception.", securityToken, ex);
+            throw new UserSecurityTokenException(INTERNAL_ERROR);
+        }
     }
 }

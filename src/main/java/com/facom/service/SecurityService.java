@@ -1,9 +1,16 @@
 package com.facom.service;
 
+import com.facom.domain.ApiResponse;
+import com.facom.domain.UserOperationStatus;
+import com.facom.exception.UserSecurityTokenException;
 import com.facom.repository.SecurityRepository;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.json.JSONObject;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class SecurityService {
@@ -13,31 +20,38 @@ public class SecurityService {
         this.securityRepository = securityRepository;
     }
 
-    public JSONObject login(String login, String password) {
+    public Map<String, Object> login(String login, String password) {
         Long verifiedUserId = securityRepository.verifyUserLogin(login, password);
-        JSONObject json = new JSONObject();
+        Map jsonMap = new HashMap<>();
         if (verifiedUserId != null) {
             String securityToken = securityRepository.getSecurityToken(verifiedUserId);
             if (securityToken != null) {
-                json.put("securityToken", securityToken);
-                json.put("operationStatus", "success");
+                jsonMap.put("securityToken", securityToken);
             } else {
                 Integer result = securityRepository.generateSecurityToken(verifiedUserId);
                 if (result != null) {
                     securityToken = securityRepository.getSecurityToken(verifiedUserId);
                     if (securityToken != null) {
-                        json.put("securityToken", securityToken);
-                        json.put("operationStatus", "success");
-                    } else {
-                        json.put("operationStatus", "wrong_login");
+                        jsonMap.put("securityToken", securityToken);
                     }
-                } else {
-                    json.put("operationStatus", "wrong_login");
                 }
             }
-        } else {
-            json.put("operationStatus", "wrong_login");
         }
-        return json;
+        if (jsonMap.containsKey("securityToken")) {
+            jsonMap.put("operationStatus", "success");
+        } else {
+            jsonMap.put("operationStatus", "wrong_login");
+        }
+        return jsonMap;
+    }
+
+    //Return null if no user for this token
+    @Nullable
+    public Long getUserIdBySecurityToken (String securityToken) throws UserSecurityTokenException {
+        try {
+            return securityRepository.getUserIdByToken(securityToken);
+        } catch (UserSecurityTokenException ex) {
+            throw ex;
+        }
     }
 }
