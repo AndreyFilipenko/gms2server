@@ -4,6 +4,7 @@ import com.facom.domain.*;
 import com.facom.exception.UserSecurityTokenException;
 import com.facom.service.SecurityService;
 import com.facom.service.UserService;
+import com.facom.utils.SecurityUtils;
 import org.json.JSONObject;
 import org.json.JSONString;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import static com.facom.domain.UserOperationStatus.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class UserController {
@@ -35,15 +37,26 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody UserLoginDto userLoginDto) {
-
-        Map jsonMapResult = securityService.login(userLoginDto.getLogin(),
-                userLoginDto.getPassword());
-        return ResponseEntity.ok(jsonMapResult);
+    public ResponseEntity<ApiResponse<UserOperationStatus, Map<String, Object>>> login(@RequestBody UserLoginDto userLoginDto) throws UserSecurityTokenException {
+        try {
+            String securityToken = securityService.getSecurityToken(userLoginDto.getLogin(),
+                    userLoginDto.getPassword());
+            Map<String, Object> responseJsonMap = new HashMap<>();
+            responseJsonMap.put("security_token", securityToken);
+            return ResponseEntity.ok(new ApiResponse<>(SUCCESSFUL_OPERATION, responseJsonMap));
+        } catch (UserSecurityTokenException ex) {
+            UserOperationStatus operationStatus = ex.getOperationStatus();
+            return ResponseEntity.ok(new ApiResponse(operationStatus, null));
+        }
     }
 
     @PostMapping("/avatar")
     public ResponseEntity<ApiResponse<UserOperationStatus, Map<String, Object>>> getUserAvatar(@RequestBody UserSecurityTokenDto userSecurityTokenDto) {
+        String userLogin = SecurityUtils.getCurrentUserLogin();
+        System.out.println("Current User: " + userLogin);
+
+        return ResponseEntity.ok(new ApiResponse(SUCCESSFUL_OPERATION, null));
+        /*
         try {
             Long userId = securityService.getUserIdBySecurityToken(userSecurityTokenDto.getSecurityToken());;
             Map<String, Object> responseJsonMap = new HashMap<>();
@@ -52,6 +65,6 @@ public class UserController {
         } catch (UserSecurityTokenException ex) {
             UserOperationStatus operationStatus = ex.getOperationStatus();
             return ResponseEntity.ok(new ApiResponse(operationStatus, null));
-        }
+        }*/
     }
 }
