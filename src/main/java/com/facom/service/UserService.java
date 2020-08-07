@@ -1,11 +1,13 @@
 package com.facom.service;
 
 import com.facom.repository.UserRepository;
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.facom.domain.OperationStatus.*;
+
 
 @Service
 public class UserService {
@@ -19,9 +21,9 @@ public class UserService {
         boolean isCreated = userRepository.createUser(login, password);
         Map jsonMap = new HashMap<>();
         if (isCreated) {
-            jsonMap.put("operationStatus", "sucsess");
+            jsonMap.put("operationStatus", SUCCESSFUL_OPERATION);
         } else {
-            jsonMap.put("operationStatus", "failure");
+            jsonMap.put("operationStatus", FAILED_OPERATION);
         }
         return jsonMap;
     }

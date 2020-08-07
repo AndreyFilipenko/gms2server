@@ -1,19 +1,19 @@
 package com.facom.exception;
 
-import com.facom.domain.UserOperationStatus;
+import com.facom.domain.OperationStatus;
 
 public class UserSecurityTokenException extends Exception {
-    private UserOperationStatus operationStatus;
+    private OperationStatus operationStatus;
 
-    public UserSecurityTokenException(UserOperationStatus operationStatus) {
+    public UserSecurityTokenException(OperationStatus operationStatus) {
         this.operationStatus = operationStatus;
     }
 
-    public UserOperationStatus getOperationStatus() {
+    public OperationStatus getOperationStatus() {
         return operationStatus;
     }
 
-    public void setOperationStatus(UserOperationStatus operationStatus) {
+    public void setOperationStatus(OperationStatus operationStatus) {
         this.operationStatus = operationStatus;
     }
 }

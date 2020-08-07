@@ -1,11 +1,9 @@
 package com.facom.cache;
 
-import java.sql.SQLOutput;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.facom.domain.UserOperationStatus;
 import com.facom.exception.UserSecurityTokenException;
 import com.facom.model.UserEnvironment;
 import com.facom.model.security.UserAuthentication;
@@ -13,7 +11,7 @@ import com.facom.repository.SecurityRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-import static com.facom.domain.UserOperationStatus.*;
+import static com.facom.domain.OperationStatus.*;
 
 @Component
 public class SecurityCache {

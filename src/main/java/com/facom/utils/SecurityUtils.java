@@ -10,6 +10,10 @@ public class SecurityUtils {
         return getCurrentUserEnvironment().getLogin();
     }
 
+    public static Long getCurrentUserId() {
+        return getCurrentUserEnvironment().getId();
+    }
+
     private static UserEnvironment getCurrentUserEnvironment() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth instanceof UserAuthentication) {
