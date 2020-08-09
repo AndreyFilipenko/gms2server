@@ -2,7 +2,8 @@ package com.facom.repository;
 
 import com.facom.domain.ApiResponse;
 import com.facom.domain.OperationStatus;
-import com.facom.domain.UserAvatar;
+import com.facom.domain.UserAvatarSex;
+import com.facom.model.UserAvatar;
 import com.facom.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,8 @@ public class UserAvatarRepository {
     private static final Logger logger = LoggerFactory.getLogger(UserAvatarRepository.class);
 
     private static final String SELECT_USER_AVATAR = "select * from users_avatar where user_id = :user_id;";
+
+    private static final String INSERT_USER_AVATAR = "insert into users_avatar(user_id, avatar_name, sex) values (:user_id, :avatar_name, :sex)";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -46,10 +49,27 @@ public class UserAvatarRepository {
 
     }
 
+    public boolean createUserAvatar(String avatarName, UserAvatarSex avatarSex) {
+        OperationStatus userAvatarStatus = getUserAvatar().getOperationStatus();
+        if (userAvatarStatus == USER_AVATAR_NOT_EXISTS) {
+            MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+            namedParameters.addValue("user_id", SecurityUtils.getCurrentUserId());
+            namedParameters.addValue("avatar_name", avatarName);
+            namedParameters.addValue("sex", avatarSex.toString());
+            try {
+                int result = template.update(INSERT_USER_AVATAR, namedParameters);
+                return result > 0;
+            } catch (DataAccessException ex) {
+                logger.error("Invoke createUserAvatar({},{} with exception.)", avatarName, avatarSex, ex);
+            }
+        }
+        return false;
+    }
+
     private static RowMapper<UserAvatar>  getUserAvatarRowMapper() {
         return (rs, i) -> new UserAvatar(
                 rs.getString("avatar_name"),
-                rs.getBoolean("sex")
+                rs.getString("sex")
         );
     }
 }

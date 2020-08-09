@@ -2,15 +2,10 @@ package com.facom.service;
 
 import com.facom.domain.ApiResponse;
 import com.facom.domain.OperationStatus;
-import com.facom.domain.UserAvatar;
+import com.facom.domain.UserAvatarSex;
+import com.facom.model.UserAvatar;
 import com.facom.repository.UserAvatarRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.facom.domain.OperationStatus.FAILED_OPERATION;
-import static com.facom.domain.OperationStatus.SUCCESSFUL_OPERATION;
 
 @Service
 public class UserAvatarService {
@@ -24,4 +19,8 @@ public class UserAvatarService {
         ApiResponse<OperationStatus, UserAvatar> userAvatar = userAvatarRepository.getUserAvatar();
         return userAvatar;
     }
-}
+
+    public boolean createUserAvatar(String avatarName, UserAvatarSex avatarSex) {
+        return userAvatarRepository.createUserAvatar(avatarName, avatarSex);
+    }
+ }
