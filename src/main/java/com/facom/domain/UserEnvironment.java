@@ -1,4 +1,4 @@
-package com.facom.model;
+package com.facom.domain;
 
 public class UserEnvironment {
     private final Long id;

@@ -1,7 +1,7 @@
 package com.facom.utils;
 
-import com.facom.model.UserEnvironment;
-import com.facom.model.security.UserAuthentication;
+import com.facom.domain.UserEnvironment;
+import com.facom.domain.security.UserAuthentication;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

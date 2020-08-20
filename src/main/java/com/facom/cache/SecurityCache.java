@@ -5,8 +5,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.facom.exception.UserSecurityTokenException;
-import com.facom.model.UserEnvironment;
-import com.facom.model.security.UserAuthentication;
+import com.facom.domain.UserEnvironment;
+import com.facom.domain.security.UserAuthentication;
 import com.facom.repository.SecurityRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.facom.model;
+package com.facom.domain;
 
 import com.facom.domain.UserAvatarSex;
 

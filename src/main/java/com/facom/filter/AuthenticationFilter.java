@@ -1,9 +1,7 @@
 package com.facom.filter;
 
-import com.facom.cache.SecurityCache;
-import com.facom.model.security.UserAuthentication;
+import com.facom.domain.security.UserAuthentication;
 import com.facom.service.SecurityService;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 

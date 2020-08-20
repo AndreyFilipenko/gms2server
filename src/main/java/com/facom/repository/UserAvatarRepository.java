@@ -3,7 +3,7 @@ package com.facom.repository;
 import com.facom.domain.ApiResponse;
 import com.facom.domain.OperationStatus;
 import com.facom.domain.UserAvatarSex;
-import com.facom.model.UserAvatar;
+import com.facom.domain.UserAvatar;
 import com.facom.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +25,8 @@ public class UserAvatarRepository {
     private static final String SELECT_USER_AVATAR = "select * from users_avatar where user_id = :user_id;";
 
     private static final String INSERT_USER_AVATAR = "insert into users_avatar(user_id, avatar_name, sex) values (:user_id, :avatar_name, :sex)";
+
+    private static final String UPDATE_USER_AVATAR = "update users_avatar set (avatar_name, sex) = (:avatar_name, :sex) where user_id = :user_id;";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -60,10 +62,24 @@ public class UserAvatarRepository {
                 int result = template.update(INSERT_USER_AVATAR, namedParameters);
                 return result > 0;
             } catch (DataAccessException ex) {
-                logger.error("Invoke createUserAvatar({},{} with exception.)", avatarName, avatarSex, ex);
+                logger.error("Invoke createUserAvatar({},{}) with exception.", avatarName, avatarSex, ex);
             }
         }
         return false;
+    }
+
+    public Integer updateUserAvatar(String avatarName, UserAvatarSex avatarSex) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("user_id", SecurityUtils.getCurrentUserId());
+        namedParameters.addValue("avatar_name", avatarName);
+        namedParameters.addValue("sex", avatarSex.toString());
+        try {
+            int result = template.update(UPDATE_USER_AVATAR, namedParameters);
+            return result;
+        } catch (DataAccessException ex) {
+            logger.error("Invoke updateUserAvatar({},{}) with exception.", avatarName, avatarSex, ex);
+        }
+        return null;
     }
 
     private static RowMapper<UserAvatar>  getUserAvatarRowMapper() {

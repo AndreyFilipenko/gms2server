@@ -1,6 +1,6 @@
-package com.facom.model.security;
+package com.facom.domain.security;
 
-import com.facom.model.UserEnvironment;
+import com.facom.domain.UserEnvironment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 

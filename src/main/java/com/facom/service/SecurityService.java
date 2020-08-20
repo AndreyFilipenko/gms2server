@@ -2,7 +2,7 @@ package com.facom.service;
 
 import com.facom.cache.SecurityCache;
 import com.facom.exception.UserSecurityTokenException;
-import com.facom.model.security.UserAuthentication;
+import com.facom.domain.security.UserAuthentication;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
