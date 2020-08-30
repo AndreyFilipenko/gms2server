@@ -4,14 +4,11 @@ import com.facom.domain.*;
 import com.facom.exception.UserSecurityTokenException;
 import com.facom.service.SecurityService;
 import com.facom.service.UserService;
-import org.json.JSONObject;
-import org.json.JSONString;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import static com.facom.domain.UserOperationStatus.*;
+import static com.facom.domain.OperationStatus.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,22 +32,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody UserLoginDto userLoginDto) {
-
-        Map jsonMapResult = securityService.login(userLoginDto.getLogin(),
-                userLoginDto.getPassword());
-        return ResponseEntity.ok(jsonMapResult);
-    }
-
-    @PostMapping("/avatar")
-    public ResponseEntity<ApiResponse<UserOperationStatus, Map<String, Object>>> getUserAvatar(@RequestBody UserSecurityTokenDto userSecurityTokenDto) {
+    public ResponseEntity<ApiResponse<OperationStatus, Map<String, Object>>> login(@RequestBody UserLoginDto userLoginDto) throws UserSecurityTokenException {
         try {
-            Long userId = securityService.getUserIdBySecurityToken(userSecurityTokenDto.getSecurityToken());;
+            String securityToken = securityService.getSecurityToken(userLoginDto.getLogin(),
+                    userLoginDto.getPassword());
             Map<String, Object> responseJsonMap = new HashMap<>();
-            responseJsonMap.put("userId", userId);
+            responseJsonMap.put("securityToken", securityToken);
             return ResponseEntity.ok(new ApiResponse<>(SUCCESSFUL_OPERATION, responseJsonMap));
         } catch (UserSecurityTokenException ex) {
-            UserOperationStatus operationStatus = ex.getOperationStatus();
+            OperationStatus operationStatus = ex.getOperationStatus();
             return ResponseEntity.ok(new ApiResponse(operationStatus, null));
         }
     }

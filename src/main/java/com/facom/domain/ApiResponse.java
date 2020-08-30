@@ -3,6 +3,8 @@ package com.facom.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.lang.Nullable;
 
+import static com.facom.domain.OperationStatus.SUCCESSFUL_OPERATION;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<S,B> {
     private final S operationStatus;
